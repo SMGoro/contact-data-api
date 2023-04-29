@@ -5,16 +5,18 @@ import json
 from http.server import BaseHTTPRequestHandler
 from bs4 import BeautifulSoup
 
-def github_json(user,repo,branch):
+def github_json(user,repo,branch,groups):
     if user =='':
         result = 'The user cannot be none!'
     else:
         try:
             if repo =='':
-                repo = 'friends'
+                repo = 'contact-data'
             if branch =='':
-                branch = 'master'
-            requests_path = 'https://github.com/' + user + '/' +repo + '/blob/'+branch+'/friendlist.json'
+                branch = 'output'
+            if groups =='':
+                groups = '/v2/friends'
+            requests_path = 'https://github.com/' + user + '/' +repo + '/blob/'+branch +groups+'.json'
             r = requests.get(requests_path)
             r.encoding = 'utf-8'
             gitpage = r.text
@@ -32,6 +34,7 @@ class handler(BaseHTTPRequestHandler):
         repo_reg = re.compile(r'repo="(.*?)"')
         user_reg = re.compile(r'user="(.*?)"')
         branch_reg = re.compile(r'branch="(.*?)"')
+        groups_reg = re.compile(r'groups="(.*?)"')
         if user_reg.findall(path):
             user = user_reg.findall(path)[0]
         else:
@@ -44,7 +47,11 @@ class handler(BaseHTTPRequestHandler):
             branch = branch_reg.findall(path)[0]
         else:
             branch = 'master'
-        data = github_json(user,repo,branch)
+        if groups_reg.findall(path):
+            groups = groups_reg.findall(path)[0]
+        else:
+            groups = 'master'
+        data = github_json(user,repo,branch,groups)
         self.send_response(200)
         self.send_header('Access-Control-Allow-Origin', '*')
         self.send_header('Content-type', 'application/json')
