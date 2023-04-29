@@ -16,8 +16,8 @@ def github_json(user,repo,branch,groups):
             if branch =='':
                 branch = 'output'
             if groups =='':
-                groups = 'v2/friends'
-            requests_path = 'https://github.com/' + user + '/' +repo + '/blob/' +branch + '/' +groups+'.json'
+                groups = 'friends'
+            requests_path = 'https://github.com/' + user + '/' +repo + '/blob/' +branch + '/v2/' +groups+'.json'
             r = requests.get(requests_path)
             r.encoding = 'utf-8'
             gitpage = r.text
@@ -51,7 +51,7 @@ class handler(BaseHTTPRequestHandler):
         if groups_reg.findall(path):
             groups = groups_reg.findall(path)[0]
         else:
-            groups = 'v2/friends'
+            groups = 'friends'
         data = github_json(user,repo,branch,groups)
         self.send_response(200)
         self.send_header('Access-Control-Allow-Origin', '*')
