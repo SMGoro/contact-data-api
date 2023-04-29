@@ -7,6 +7,7 @@ from bs4 import BeautifulSoup
 
 def github_json(user,repo,branch,groups):
     if user =='':
+        user = 'smgoro'
         result = 'The user cannot be none!'
     else:
         try:
@@ -15,8 +16,8 @@ def github_json(user,repo,branch,groups):
             if branch =='':
                 branch = 'output'
             if groups =='':
-                groups = '/v2/friends'
-            requests_path = 'https://github.com/' + user + '/' +repo + '/blob/'+branch +groups+'.json'
+                groups = 'v2/friends'
+            requests_path = 'https://github.com/' + user + '/' +repo + '/blob/' +branch + '/' +groups+'.json'
             r = requests.get(requests_path)
             r.encoding = 'utf-8'
             gitpage = r.text
@@ -38,19 +39,19 @@ class handler(BaseHTTPRequestHandler):
         if user_reg.findall(path):
             user = user_reg.findall(path)[0]
         else:
-            user = ''
+            user = 'smgoro'
         if repo_reg.findall(path):
             repo = repo_reg.findall(path)[0]
         else:
-            repo = 'friends'
+            repo = 'contact-data'
         if branch_reg.findall(path):
             branch = branch_reg.findall(path)[0]
         else:
-            branch = 'master'
+            branch = 'output'
         if groups_reg.findall(path):
             groups = groups_reg.findall(path)[0]
         else:
-            groups = 'master'
+            groups = 'v2/friends'
         data = github_json(user,repo,branch,groups)
         self.send_response(200)
         self.send_header('Access-Control-Allow-Origin', '*')
