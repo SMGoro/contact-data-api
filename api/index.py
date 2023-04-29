@@ -8,7 +8,7 @@ from bs4 import BeautifulSoup
 def github_json(user,repo,branch,groups):
     if user =='':
         user = 'smgoro'
-        result = 'The user cannot be none!'
+        # result = 'The user cannot be none!'
     else:
         try:
             if repo =='':
@@ -18,7 +18,7 @@ def github_json(user,repo,branch,groups):
             if groups =='':
                 groups = 'friends'
             # requests_path = 'https://github.com/' + user + '/' +repo + '/blob/' +branch + '/v2/' +groups+'.json'
-            requests_path = 'https://raw.githubusercontent.com/SMGoro/contact-data/output/v2/friends.json'
+            requests_path = 'https://github.com/SMGoro/contact-data/blob/output/v2/friends.json'
             r = requests.get(requests_path)
             r.encoding = 'utf-8'
             gitpage = r.text
